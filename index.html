@@ -137,9 +137,13 @@
 
       [data-bird-journal-builder] .summary-card {
         display: grid;
-        gap: 8px;
+        gap: 12px;
         margin: 8px 0 10px;
-        padding: 12px;
+        padding: 20px;
+        border-color: #f4bd87;
+        border-radius: 22px;
+        background: #fffaf0;
+        box-shadow: none;
       }
 
       [data-bird-journal-builder] .summary-card h3,
@@ -152,9 +156,40 @@
       [data-bird-journal-builder] .summary-text {
         color: var(--ink);
         font-size: 0.94rem;
-        font-weight: 800;
         line-height: 1.4;
-        white-space: pre-line;
+      }
+
+      [data-bird-journal-builder] .summary-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      [data-bird-journal-builder] .summary-entry {
+        display: grid;
+        gap: 4px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: #efe5df;
+      }
+
+      [data-bird-journal-builder] .summary-entry-label {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 950;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      [data-bird-journal-builder] .summary-entry-title {
+        color: var(--ink);
+        font-size: 1rem;
+        font-weight: 950;
+      }
+
+      [data-bird-journal-builder] .summary-entry-instruction {
+        color: var(--ink);
+        font-size: 0.96rem;
+        font-weight: 500;
       }
 
       [data-bird-journal-builder] .copy-status {
@@ -262,8 +297,8 @@
       </div>
 
       <section class="summary-card" aria-live="polite">
-        <h3>Your Bird Page Recipe</h3>
-        <p class="summary-text" data-recipe-summary>Click the button to build your page recipe.</p>
+        <h3>Your Bird Art Journal Page Recipe</h3>
+        <div class="summary-text" data-recipe-summary>Click the button to build your page recipe.</div>
         <p class="copy-status" data-copy-status></p>
       </section>
 
@@ -324,7 +359,7 @@
             label: "Layer 3: Page Development",
             items: [
               ["Decorative Edges", "Add borders, scallops, dots, stripes, or marks around the edges."],
-              ["Add Bird Fodder", "Glue on a painted paper piece, nests, birds, birdhouses, flowers, mushrooms, or other fodder."],
+              ["Add Bird Fodder", "Glue on a painted paper piece, feathers, nests, birds, birdhouses, flowers, mushrooms, or other fodder."],
               ["Paint a Bird", "Paint a bird on the page."],
               ["Paint Over Negative Shapes", "Paint around shapes to create bird related silhouettes or hidden images."],
               ["Brain Dump", "Write messy thoughts, phrases, ideas, nature or bird related words across the page."],
@@ -395,12 +430,29 @@
           render();
         }
 
+        function recipeLabel(layer) {
+          if (layer.key === "pagePrep") return "Layer 1";
+          if (layer.key === "layerTwo") return "Layer 2";
+          if (layer.key === "layerThree") return "Layer 3";
+          if (layer.key === "keepGoing") return "Layer 4+: Keep Going";
+          if (layer.key === "mood") return "Optional Mood";
+          return layer.label;
+        }
+
+        function recipeTitle(layer, result) {
+          if (layer.key === "pagePrep") return "Paint your pages with " + result.title;
+          if (layer.key === "layerTwo") return "Add " + result.title;
+          if (layer.key === "layerThree") return result.title;
+          return result.title;
+        }
+
         function recipeText() {
-          var lines = ["Your Bird Page Recipe", ""];
+          var lines = ["Your Bird Art Journal Page Recipe", ""];
           layers.forEach(function (layer) {
             var result = state[layer.key];
             if (!result) return;
-            lines.push(layer.label + ": " + result.title);
+            lines.push(recipeLabel(layer));
+            lines.push(recipeTitle(layer, result));
             lines.push(result.instruction);
             lines.push("");
           });
@@ -408,7 +460,36 @@
         }
 
         function renderSummary() {
-          summaryEl.textContent = recipeText();
+          summaryEl.innerHTML = "";
+          var list = document.createElement("div");
+          list.className = "summary-list";
+
+          layers.forEach(function (layer) {
+            var result = state[layer.key];
+            if (!result) return;
+
+            var entry = document.createElement("div");
+            entry.className = "summary-entry";
+
+            var label = document.createElement("p");
+            label.className = "summary-entry-label";
+            label.textContent = recipeLabel(layer);
+
+            var title = document.createElement("p");
+            title.className = "summary-entry-title";
+            title.textContent = recipeTitle(layer, result);
+
+            var instruction = document.createElement("p");
+            instruction.className = "summary-entry-instruction";
+            instruction.textContent = result.instruction;
+
+            entry.appendChild(label);
+            entry.appendChild(title);
+            entry.appendChild(instruction);
+            list.appendChild(entry);
+          });
+
+          summaryEl.appendChild(list);
         }
 
         function renderCards() {
