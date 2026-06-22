@@ -56,18 +56,6 @@
         padding: 28px;
       }
 
-      [data-bird-journal-builder] .journal-label {
-        width: fit-content;
-        margin: 0 0 10px;
-        padding: 5px 12px;
-        border: 2px solid #3b3352;
-        border-radius: 999px;
-        background: var(--yellow);
-        color: var(--muted);
-        font-size: 0.78rem;
-        font-weight: 900;
-      }
-
       [data-bird-journal-builder] h2,
       [data-bird-journal-builder] h3,
       [data-bird-journal-builder] p {
@@ -334,8 +322,7 @@
 
     <div class="journal-shell">
       <header class="journal-header">
-        <p class="journal-label">Whimsical Bird Art Journal</p>
-        <h2>Whimsical Bird Art Journal Page Builder</h2>
+        <h2>Whimsical Bird Journal Page Builder</h2>
         <p class="journal-purpose">Generate a layered page recipe for your art journal spread.</p>
 
         <div class="action-row">
@@ -347,7 +334,7 @@
 
       <div class="journal-content">
         <section class="summary-card" aria-live="polite">
-          <h3>Your Bird Art Journal Page Recipe</h3>
+          <h3>Your Bird Page Recipe</h3>
           <div class="summary-text" data-recipe-summary>Click the button to build your page recipe.</div>
         </section>
 
@@ -507,7 +494,7 @@
         }
 
         function recipeText() {
-          var lines = ["Your Bird Art Journal Page Recipe", ""];
+          var lines = ["Your Bird Page Recipe", ""];
           layers.forEach(function (layer) {
             var result = state[layer.key];
             if (!result) return;
